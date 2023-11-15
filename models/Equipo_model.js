@@ -41,10 +41,30 @@ class EquipoModel{
 
     }
     ingresar_equipo(equipo){
-
+        return new Promise((resolve, reject) => { 
+            let Nuevo_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario)
+            connection.query('INSERT INTO `equipos` SET ?',Nuevo_equipo, function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    return resolve(equipo)
+                }
+            }) 
+        })
     }
     ingresar_inscripcion(equipo, idDelEquipo){
-
+        return new Promise((resolve, reject) => { 
+            for (let i = 0; i < equipo.categorias.length; i++) { //Insertar varias inscripciones
+            let idDeCategoria = equipo.categorias[i]
+            let inscripcion = new Inscripcion(idDeCategoria, idDelEquipo)
+                connection.query('INSERT INTO `inscripciones` SET ?',inscripcion, function(errFinal, rowsFinal, fieldsFinals) {
+                    if (errFinal){
+                        reject("La conexión a la base de datos a fallado")
+                    }
+                })
+            }   
+            resolve()
+        })
     }
     editar_equipo(id, actualizar){
 
