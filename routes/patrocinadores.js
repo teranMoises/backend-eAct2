@@ -51,6 +51,15 @@ router.post('/', function (req, res, next) {
   }
 }); 
 
+/* DELETE */
+
+router.delete('/:index', function (req ,res , next) {
+   Patrocinador_Controller.eliminar_patrocinador(req.params.index).then(()=>{
+      res.json();
+   }).catch((error)=>{
+      res.status(500).send(error)
+   })
+})
 
 /* router.get('/nuevoPatrocinador',function(req, res, next){
    res.render('nuevoPatrocinador',{title: 'Crear un Patrocinador'});

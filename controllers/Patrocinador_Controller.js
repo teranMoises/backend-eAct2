@@ -20,7 +20,9 @@ class PatrocinadorController{
         return Patrocinador_Model.ingresar_patrocinador_views(patrocinador)
     }
     eliminar_patrocinador(id){
-
+        return new Promise((resolve, reject)=>{
+            Patrocinador_Model.eliminar_patrocinador(id).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
+        })
     }
 }
 
