@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <% if(equipos.length) { %>
+      <%  for (let i = 0; i < equipos.length; i++) { %>
+        <h2> <%= equipos[i].nombre_del_equipo %> </h2>
+        <ul>
+        <li> Representante: <%= equipos[i].representante %> </li> 
+        <li> Modalidad: <%= equipos[i].modalidad %> </li> 
+        <li> Email: <%= equipos[i].email %> </li> 
+        <li> Teléfono: <%= equipos[i].telefono %> </li> 
+        <li><strong>Participantes: </strong></li> 
+        <%  for (let j = 0; j < equipos[i].participantes.length; j++) { %>
+          <li> <%= equipos[i].participantes[j] %> </li> 
+        <% } %>
+        <% if(categorias.length > 0) { %>
+            <%  for (let k = 0; k < categorias.length; k++) { %>
+              <% if(categorias[k].id == equipos[i].categoria ) { %>
+                  <li> Categoria: <%= categorias[k].nombre %> </li> 
+            <% } %>
+          <% } %>
+        <% } %>
+        </ul> 
+      <% } %>
+    <% } else { %>
+      <h1>NO hay equipos</h1>
+    <% } %>
+  </body>
+</html>

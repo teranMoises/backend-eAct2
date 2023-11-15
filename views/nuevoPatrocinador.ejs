@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <form action method="post">
+        <label id="titulo">Nombre Comercial</label>
+        <input type="text" placeholder="nombre comercial" name="nombre_comercial" required><br>
+        <label id="titulo">Persona de Contacto</label>
+        <input type="text" placeholder="nombre" name="persona_de_contacto" required><br>
+        <label id="titulo">Teléfono</label>
+        <input type="text" placeholder="teléfono" name="telefono" required><br>
+        <label id="titulo">Tipo de Patrocinio</label><br>
+        <label>Diamante 100$</label>
+        <input type="radio" value="Diamante" name="patrocinio" required><br>
+        <label>Oro 80$</label>
+        <input type="radio" value="Oro" name="patrocinio" required><br>
+        <label>Plata 60$</label>
+        <input type="radio" value="Plata" name="patrocinio" required><br>
+        <label>Bronce (Costo acordado)</label>
+        <input type="radio" value="Bronce" name="patrocinio" required><br>
+        <label id="titulo">Comentario (Opcional)</label>
+        <input type="text" placeholder="comentario" name="comentario"><br>
+        <input type="submit" name="Crear">
+    </form>
+  </body>
+</html>
