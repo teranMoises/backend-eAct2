@@ -16,5 +16,17 @@ router.get('/', function (req, res, next) {
         })
 });
 
+router.post('/', function (req, res, next) {
+    //console.log('en routes', req.body);
+    Modalidad_Controller.ingresar_modalidad(req.body)
+        .then((resultados) => {
+            console.info(resultados);
+            res.send(resultados);
+        })
+        .catch((error) => {
+            //console.info(error);
+            res.status(400).send(error);
+        })
+});
 
 module.exports = router; 

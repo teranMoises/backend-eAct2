@@ -24,7 +24,16 @@ class ModalidadController {
         })
     }
     ingresar_modalidad(modalidad) {
+        console.log("en controller", modalidad);
+        return new Promise((resolve, reject) => {
+            if (modalidad == undefined) return reject('No se recibió información');
+            if (typeof modalidad !== "object") return reject('Formato inválido');
+            if (Object.keys(modalidad).length === 0) return reject('No se ingresó información');
 
+            Modalidad_Model.ingresar_modalidad(modalidad)
+                .then(() => { resolve(Modalidad_Model.ver_modalidad()) })
+                .catch((error) => { reject(error); })
+        })
     }
 }
 
