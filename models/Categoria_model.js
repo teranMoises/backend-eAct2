@@ -25,8 +25,8 @@ class CategoriaModel {
     buscar_categoria(id_cat_URI, nom_cat_body) {
         //FALTA   Validar que sea un numero
         return new Promise((resolve, reject) => {
-            if (id_cat_URI != 'buscar') resolve(id_cat_URI);
-            if (nom_cat_body != undefined) {
+            if (nom_cat_body == null) { console.log('No por body'); resolve(id_cat_URI) }
+            if (id_cat_URI == null) {
                 let consulta = connection.query('SELECT * FROM `categorias` WHERE ?', nom_cat_body, function (error, results, fields) {
                     if (error) {
                         console.error("Error SQL: ", error);
@@ -43,36 +43,33 @@ class CategoriaModel {
                 });
                 //console.log(consulta.sql)
             } else {
-                reject('No ingresó ningún nombre');
+                reject('No ingresó ningún dato');
             }
         })
-
     }
     ver_equipos_por_categoria(id_cat, nom_cat) {
         console.log('CAT models:', id_cat, nom_cat);
-        return new Promise((resolve, reject) => {
-            this.buscar_categoria(id_cat, nom_cat)
-                .then((numID) => {
-                    let id = Number(numID);
-                    console.log('numeros', numID, id);
-                    console.log('CAT buscar:', id, typeof id);
-                    if (isNaN(id)) reject(id);
-                    connection.query('SELECT `nombre_categoria`,`id_equipo`,`representante`, `email`, `telefono`, `nombre_de_equipo`, `participantes`, `comentario` FROM `inscripciones` JOIN `categorias` ON `id_categoria` = `idCategoria` JOIN `equipos` ON `id_equipo` = `idEquipo` WHERE `id_categoria` = ?', id, function (err, rows, fields) {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            //console.log('RESULTADOS',rows, rows.length)
-                            if (rows.length < 1) {
-                                //console.log('VACIO')
-                                reject('No se encontró la información solicitada');
-                            }
-                            resolve(rows);
+        return new Promise(async (resolve, reject) => {
+            try {
+                let id = await this.buscar_categoria(id_cat, nom_cat);
+                console.log('CAT buscar:', id);
+                if (isNaN(Number(id))) reject(id);
+                connection.query('SELECT `nombre_categoria`,`id_equipo`,`representante`, `email`, `telefono`, `nombre_de_equipo`, `participantes`, `comentario` FROM `inscripciones` JOIN `categorias` ON `id_categoria` = `idCategoria` JOIN `equipos` ON `id_equipo` = `idEquipo` WHERE `id_categoria` = ?', id, function (err, rows, fields) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        //console.log('RESULTADOS',rows, rows.length)
+                        if (rows.length < 1) {
+                            //console.log('VACIO')
+                            reject('No se encontró la información solicitada');
                         }
-                    })
-
+                        resolve(rows);
+                    }
                 })
-                .catch((errorSQL) => { reject(errorSQL); });
-
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
         })
     }
     ingresar_categoria(categoria) {
