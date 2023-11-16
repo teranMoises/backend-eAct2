@@ -70,11 +70,27 @@ class EquipoModel{
 
     }
     eliminar_equipo(id){
-
+        return new Promise((resolve, reject) => {
+            connection.query('DELETE FROM `equipos` WHERE `id_equipo` = ?',id, function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve()  
+                }
+            })
+        })
     }
-    eliminar_categoria_inscrita(id){
-
-    }
+    eliminar_categoria_inscrita(idEquipo, idCategoria){
+        return new Promise((resolve, reject) => {
+            connection.query('DELETE FROM `inscripciones` WHERE `idEquipo` = ? AND `idCategoria` = ?',[idEquipo, idCategoria], function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve()  
+                }
+            })
+        })
+    } 
 }
 
 module.exports = new EquipoModel(); 
