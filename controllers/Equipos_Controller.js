@@ -30,10 +30,15 @@ class EquipoController{
     editar_equipo(id, actualizar){
     }
     eliminar_equipo(id){
-
+        return new Promise((resolve, reject)=>{
+            Equipo_model.eliminar_equipo(id).then(resolve()).catch((error)=>{reject(error)});    
+        }) 
     }
-    eliminar_categoria_inscrita(id){
-    }
+    eliminar_categoria_inscrita(idEquipo, idCategoria){
+        return new Promise((resolve, reject)=>{ 
+            Equipo_model.eliminar_categoria_inscrita(idEquipo, idCategoria).then(resolve()).catch((error)=>{reject(error)});    
+        }) 
+    } 
 }
 
 module.exports = new EquipoController();
