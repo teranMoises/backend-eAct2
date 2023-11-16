@@ -20,6 +20,16 @@ class CategoriaController {
 
     }
     editar_categoria(id, actualizar) {
+        //console.log("en controller", id, actualizar);
+        return new Promise((resolve, reject) => {
+            if (id != undefined && !isNaN(Number(id))) {
+                Categoria_model.editar_categoria(id, actualizar)
+                    .then((retorno) => { resolve(retorno) })
+                    .catch((error) => { reject(error); })
+            } else {
+                return reject('No se ingresó una ID válido');
+            }
+        })
     }
     eliminar_categoria(id) {
     }

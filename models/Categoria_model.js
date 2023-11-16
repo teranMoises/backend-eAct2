@@ -76,7 +76,25 @@ class CategoriaModel {
 
     }
     editar_categoria(id, actualizar) {
+        return new Promise((resolve, reject) => {
+            console.log("en models", id, actualizar);
+            let query = connection.query('UPDATE `categorias` SET nombre_categoria = ? WHERE id_categoria = ?', [actualizar.nombre_categoria, id], function (error, results, fields) {
+                if (error) reject(error);
+                if (results.affectedRows > 0) {
+                    //console.log('ACTUALIZAR: \n', results);
+                    if (results.changedRows > 0) {
+                        resolve('Se ha modificado la categoría "' + id + '" (' + actualizar.nombre_categoria + ')');
+                    } else {
+                        resolve('No se modificó la categoría "' + id + '", debido a que los datos ingresados son iguales.');
+                    }
 
+                } else {
+                    console.log('La categoría "' + id + '" no existe');
+                    reject('No existe ninguna categoría con el ID indicado: ' + id);
+                }
+            });
+            console.log("consulta",query.sql);
+        })
     }
     eliminar_categoria(id) {
 
