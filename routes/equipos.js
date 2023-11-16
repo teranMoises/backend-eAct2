@@ -35,5 +35,19 @@ router.post('/', function(req, res, next){
     })
 });
 
-
+/* DELETE */
+router.delete('/:index',function(req, res, next){
+    Equipos_Controller.eliminar_equipo(req.params.index).then(()=>{
+        res.json();
+    }).catch((error)=>{
+        res.status(500).send(error)
+    }) 
+});  
+router.delete('/sin_categoria/:index/:index2',function(req, res, next){
+    Equipos_Controller.eliminar_categoria_inscrita(req.params.index, req.params.index2).then(()=>{
+        res.json();
+    }).catch((error)=>{
+        res.status(500).send(error)
+    }) 
+});  
 module.exports = router; 
