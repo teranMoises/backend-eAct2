@@ -25,7 +25,11 @@ class EquipoModel{
                 if (err){
                     reject("La conexión a la base de datos a fallado")
                 }else {
-                    resolve(rows)  
+                    if(rows.length == 0){
+                        resolve('No se encontró la información solicitada')
+                    }else{
+                        resolve(rows)   
+                    }
                 }
             })
         })
@@ -47,17 +51,18 @@ class EquipoModel{
                 if (err){
                     reject("La conexión a la base de datos a fallado")
                 }else {
-                    return resolve(equipo)
+                    let retorna = {categorias: equipo.categorias, idDelEquipo: rows.insertId}
+                    resolve(retorna)
                 }
             }) 
         })
     }
-    ingresar_inscripcion(equipo, idDelEquipo){
+    ingresar_inscripcion(inscripcion){
         return new Promise((resolve, reject) => { 
-            for (let i = 0; i < equipo.categorias.length; i++) { //Insertar varias inscripciones
-            let idDeCategoria = equipo.categorias[i]
-            let inscripcion = new Inscripcion(idDeCategoria, idDelEquipo)
-                connection.query('INSERT INTO `inscripciones` SET ?',inscripcion, function(errFinal, rowsFinal, fieldsFinals) {
+            for (let i = 0; i < inscripcion.categorias.length; i++) { //Insertar varias inscripciones
+            let idDeCategoria = inscripcion.categorias[i]
+            let Nueva_inscripcion = new Inscripcion(idDeCategoria, inscripcion.idDelEquipo)
+                connection.query('INSERT INTO `inscripciones` SET ?',Nueva_inscripcion, function(errFinal, rowsFinal, fieldsFinals) {
                     if (errFinal){
                         reject("La conexión a la base de datos a fallado")
                     }

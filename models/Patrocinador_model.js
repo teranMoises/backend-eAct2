@@ -24,7 +24,11 @@ class PatrocinadorModel{
                 if (err){
                     reject("La conexión a la base de datos a fallado")
                 }else {
-                    resolve(rows)  
+                    if(rows.length == 0){
+                        resolve('No se encontró la información solicitada')
+                    }else{
+                        resolve(rows)   
+                    }
                 }
             })
         })  
@@ -36,14 +40,19 @@ class PatrocinadorModel{
                 if (err){
                     reject("La conexión a la base de datos a fallado")
                 }else {
-                    resolve(patrocinador)  
+                    if(patrocinador.idPatrocinio == 5){
+                        let retorna = {idEquipo: patrocinador.idEquipo, idPatrocinador: rows.insertId}
+                        resolve(retorna)  
+                    }else{
+                        resolve()
+                    }
                 }
             })
         })
     }
-    ingresar_padrino(patrocinador, idPatrocinador){
+    ingresar_padrino(patrocinador){
         return new Promise((resolve, reject) => {
-            let Nuevo_padrino = new Padrino(patrocinador.idEquipo, idPatrocinador)
+            let Nuevo_padrino = new Padrino(patrocinador.idEquipo, patrocinador.idPatrocinador)
             connection.query('INSERT INTO `padrinos` SET ?',Nuevo_padrino, function(errFinal, rowsFinal, fieldsFinal) {
                 if (errFinal){
                     reject("La conexión a la base de datos a fallado")
@@ -65,7 +74,7 @@ class PatrocinadorModel{
                 if (err){
                     reject("La conexión a la base de datos a fallado")
                 }else {
-                    resolve(rows)  
+                    resolve()  
                 }
             })
         })  

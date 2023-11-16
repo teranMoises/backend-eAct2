@@ -32,13 +32,13 @@ class CategoriaModel {
                         console.error("Error SQL: ", error);
                         reject(error);
                     };
-                    if (results) {
+                    if (results.length > 0) {
                         //console.log("ENCONTRADO", results);
                         console.log('ID ENCONTRADO:', results[0].id_categoria);
                         resolve(results[0].id_categoria);
                     } else {
-                        console.error("Error: ", results);
-                        reject(results);
+                        //console.error("Error: No se encontraron coincidencias", results);
+                        reject("Error: No se encontraron coincidencias");
                     };
                 });
                 //console.log(consulta.sql)

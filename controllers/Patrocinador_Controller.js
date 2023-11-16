@@ -8,12 +8,12 @@ class PatrocinadorController{
     }
     ingresar_patrocinador(patrocinador){
         return new Promise((resolve, reject)=>{
-            Patrocinador_Model.ingresar_patrocinador(patrocinador).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
+            Patrocinador_Model.ingresar_patrocinador(patrocinador).then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
         })
     }
-    ingresar_padrino(patrocinador, idPatrocinador){
+    ingresar_padrino(patrocinador){
         return new Promise((resolve, reject)=>{
-            Patrocinador_Model.ingresar_padrino(patrocinador, idPatrocinador).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
+            Patrocinador_Model.ingresar_padrino(patrocinador).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
         })
     }
     ingresar_patrocinador_views(patrocinador){   
