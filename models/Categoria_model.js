@@ -47,6 +47,27 @@ class CategoriaModel {
             }
         })
     }
+    buscar_categoria_id(id_cat) {
+        return new Promise((resolve, reject) => {
+            if (isNaN(Number(id_cat))) reject('Ingresó un ID inválido: ' + id_cat);
+            connection.query('SELECT * FROM `categorias` WHERE ?', { id_categoria: id_cat }, function (error, results, fields) {
+                if (error) {
+                    console.error("Error SQL: ", error);
+                    reject(error);
+                };
+                if (results.length > 0) {
+                    //console.log("ENCONTRADO", results);
+                    resolve(results);
+                    //resolve(results[0].id_categoria);
+                } else {
+                    //console.error("Error: No se encontraron coincidencias", results);
+                    reject("Error: No se encontraron coincidencias");
+                };
+            });
+        })
+
+
+    }
     ver_equipos_por_categoria(id_cat, nom_cat) {
         console.log('CAT models:', id_cat, nom_cat);
         return new Promise(async (resolve, reject) => {
@@ -76,7 +97,30 @@ class CategoriaModel {
 
     }
     editar_categoria(id, actualizar) {
-
+        const buscar = async (id_cat_up, bien, mal) => {
+            try {
+                bien(await this.buscar_categoria_id(id_cat_up));
+            } catch (error) {
+                mal(error);
+            }
+        }
+        return new Promise((resolve, reject) => {
+            console.log("en models", id, actualizar);
+            let query = connection.query('UPDATE `categorias` SET nombre_categoria = ? WHERE id_categoria = ?', [actualizar.nombre_categoria, id], function (error, results, fields) {
+                if (error) reject(error);
+                //console.log('ACTUALIZAR: \n', results);
+                if (results.affectedRows < 1) {
+                    console.log('La categoría "' + id + '" no existe');
+                    reject('No existe ninguna categoría con el ID indicado: ' + id);
+                }
+                if (results.changedRows < 1) {
+                    resolve('No se modificó la categoría "' + id + '", debido a que los datos ingresados son iguales.');
+                }
+                //resolve('Se ha modificado la categoría "' + id + '" (' + actualizar.nombre_categoria + ')');
+                buscar(id, resolve, reject);
+            });
+            //console.log("consulta", query.sql);
+        })
     }
     eliminar_categoria(id) {
 
