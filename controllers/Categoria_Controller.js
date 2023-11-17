@@ -17,7 +17,9 @@ class CategoriaController {
         })
     }
     ingresar_categoria(categoria) {
-
+        return new Promise((resolve, reject)=>{
+            Categoria_model.ingresar_categoria(categoria).then(resolve()).catch((error)=>{reject(error)});    
+        }) 
     }
     editar_categoria(id, actualizar) {
         //console.log("en controller", id, actualizar);
