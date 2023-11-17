@@ -94,7 +94,16 @@ class CategoriaModel {
         })
     }
     ingresar_categoria(categoria) {
-
+        return new Promise((resolve, reject) => {
+            let Nueva_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio)
+            connection.query('INSERT INTO `categorias` SET ?',Nueva_categoria, function(err, rows, fields) {
+                if (err){
+                   reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve()  
+                }
+            }) 
+        })
     }
     editar_categoria(id, actualizar) {
         const buscar = async (id_cat_up, bien, mal) => {
