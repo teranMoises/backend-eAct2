@@ -31,7 +31,7 @@ class EquipoController{
     } 
     editar_equipo(id, actualizar){
         return new Promise((resolve, reject) => {
-            if (id != undefined && !isNaN(Number(id))) {
+            if (id != undefined) {
                 Equipo_model.editar_equipo(id, actualizar)
                     .then((retorno) => { resolve(retorno) })
                     .catch((error) => { reject(error); })

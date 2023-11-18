@@ -39,6 +39,8 @@ router.delete('/:index',function(req, res, next){
     }) 
 });  
 
+
+/*Ver padrinos*/
 router.get('/padrinos', function (req, res, next) {
     Equipos_Controller.ver_padrinos().then((resultados)=>{
         res.json(resultados);
@@ -56,8 +58,8 @@ router.delete('/sin_categoria/:index/:index2',function(req, res, next){
 });  
 module.exports = router; 
 
-
-router.put('/:editar', function (req, res, next) {
+/*Editar equipo*/
+router.put('/editar_equipo/:editar', function (req, res, next) {
     Equipos_Controller.editar_equipo(req.params.editar, req.body)
         .then((resultados) => {
             res.send(resultados);
@@ -65,4 +67,5 @@ router.put('/:editar', function (req, res, next) {
         .catch((error) => {
             res.status(404).send(error);
         })
+        console.table(req.body)
 });
