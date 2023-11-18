@@ -54,4 +54,20 @@ router.delete('/sin_categoria/:index/:index2',function(req, res, next){
         res.status(500).send(error)
     }) 
 });  
+
+
+/* Views */
+
+router.get('/verEquipo', function(req, res, next) {
+    Equipos_Controller.ver_equipos().then((resultados)=>{
+        let equipos = resultados;
+        res.render('verEquipos',{title: 'Ingresar Equipo', equipos:equipos});
+     }).catch((error)=>{
+        res.status(500).send(error)
+     })
+  });
+  
+
+
 module.exports = router; 
+
