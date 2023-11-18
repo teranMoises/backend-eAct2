@@ -76,15 +76,35 @@ router.get('/nuevoPatrocinador',function(req, res, next){
 })   
 
 router.post('/nuevoPatrocinador', function (req, res, next) {
-   Patrocinador_Controller.ingresar_patrocinador(req.body).then(()=>{
-      Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
-         res.send(resultados);
+   if(req.body.idPatrocinio == 5){  
+      if(req.body.idEquipo != ""){
+         Patrocinador_Controller.ingresar_patrocinador(req.body).then((resultado)=>{
+            Patrocinador_Controller.ingresar_padrino(resultado).then(()=>{
+               Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
+                  res.json(resultados);
+               }).catch((error)=>{
+                  res.status(500).send(error)
+               })
+            }).catch((error)=>{
+               res.status(500).send(error)
+            }) 
+         }).catch((error)=>{
+            res.status(500).send(error)
+         })
+      }else{
+         res.status(500).send("Para ser un padrino debe de patrocinar algún equipo")
+      }
+  }else{
+      Patrocinador_Controller.ingresar_patrocinador(req.body).then(()=>{
+         Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
+            res.json(resultados);
+         }).catch((error)=>{
+            res.status(500).send(error)
+         })
       }).catch((error)=>{
          res.status(500).send(error)
       })
-   }).catch((error)=>{
-      res.status(500).send(error)
-   })
+  }
 }); 
 
 module.exports = router; 
