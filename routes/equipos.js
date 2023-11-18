@@ -38,6 +38,15 @@ router.delete('/:index',function(req, res, next){
         res.status(500).send(error)
     }) 
 });  
+
+router.get('/padrinos', function (req, res, next) {
+    Equipos_Controller.ver_padrinos().then((resultados)=>{
+        res.json(resultados);
+    }).catch((error)=>{
+        res.status(500).send(error)
+    })
+});
+
 router.delete('/sin_categoria/:index/:index2',function(req, res, next){
     Equipos_Controller.eliminar_categoria_inscrita(req.params.index, req.params.index2).then(()=>{
         res.json();
