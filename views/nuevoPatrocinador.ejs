@@ -13,18 +13,17 @@
         <input type="text" placeholder="nombre" name="persona_de_contacto" required><br>
         <label id="titulo">Teléfono</label>
         <input type="text" placeholder="teléfono" name="telefono" required><br>
+
         <label id="titulo">Tipo de Patrocinio</label><br>
-        <label>Diamante 100$</label>
-        <input type="radio" value="Diamante" name="patrocinio" required><br>
-        <label>Oro 80$</label>
-        <input type="radio" value="Oro" name="patrocinio" required><br>
-        <label>Plata 60$</label>
-        <input type="radio" value="Plata" name="patrocinio" required><br>
-        <label>Bronce (Costo acordado)</label>
-        <input type="radio" value="Bronce" name="patrocinio" required><br>
+
+        <%  for (let i = 0; i < patrocinios.length; i++) { %>
+          <label><%= patrocinios[i].nombre_patrocinio %> Costo: <%= patrocinios[i].monto %></label>
+          <input type="radio" value="<%= patrocinios[i].id_patrocinio %>" name="idPatrocinio" required><br>
+        <% } %>
+
         <label id="titulo">Comentario (Opcional)</label>
         <input type="text" placeholder="comentario" name="comentario"><br>
-        <input type="submit" name="Crear">
+        <input type="submit">
     </form>
   </body>
 </html>

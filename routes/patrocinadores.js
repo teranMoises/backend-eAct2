@@ -56,15 +56,29 @@ router.delete('/:index', function (req ,res , next) {
    })
 })
 
-/* router.get('/nuevoPatrocinador',function(req, res, next){
-   res.render('nuevoPatrocinador',{title: 'Crear un Patrocinador'});
-})  
- */
 
+/* VIEWS */
 
-/* router.post('/nuevoPatrocinador', function (req, res, next) {
-   let ver = Patrocinador_Controller.ingresar_patrocinador_views(req.body)
-   res.status(200).send(ver)
-}); */
+router.get('/nuevoPatrocinador',function(req, res, next){
+   Patrocinador_Controller.ver_patrocinios().then((resultados)=>{
+      let patrocinios = resultados;
+      res.render('nuevoPatrocinador',{title: 'Crear un Patrocinador', patrocinios: patrocinios});
+      //console.log(resultados)
+   }).catch((error)=>{
+      res.status(500).send(error)
+   })
+})   
+
+router.post('/nuevoPatrocinador', function (req, res, next) {
+   Patrocinador_Controller.ingresar_patrocinador(req.body).then(()=>{
+      Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
+         res.send(resultados);
+      }).catch((error)=>{
+         res.status(500).send(error)
+      })
+   }).catch((error)=>{
+      res.status(500).send(error)
+   })
+}); 
 
 module.exports = router; 

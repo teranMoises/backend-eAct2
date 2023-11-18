@@ -33,6 +33,21 @@ class PatrocinadorModel{
             })
         })  
     }
+    ver_patrocinios(){ 
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM `patrocinios`', function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    if(rows.length == 0){
+                        resolve('No se encontró la información solicitada')
+                    }else{
+                        resolve(rows)   
+                    }
+                }
+            })
+        })  
+    }
     ingresar_patrocinador(patrocinador){
         return new Promise((resolve, reject) => {
             let Nuevo_patrocinador = new Patrocinador(patrocinador.nombre_comercial, patrocinador.persona_de_contacto, patrocinador.telefono, patrocinador.idPatrocinio, patrocinador.comentario)
@@ -61,12 +76,6 @@ class PatrocinadorModel{
                 }
             })   
         })
-    }
-    ingresar_patrocinador_views(patrocinador){   
-/*         patrocinador.id = uuidv4();
-        let nuevo_patrocinador = new Patrocinador(patrocinador.id, patrocinador.nombre_comercial, patrocinador.persona_de_contacto, patrocinador.telefono, patrocinador.patrocinio, patrocinador.comentario);
-        patrocinadores.push(nuevo_patrocinador);
-        return patrocinadores */
     }
     eliminar_patrocinador(id){
         return new Promise((resolve, reject) => {
