@@ -11,7 +11,16 @@ router.get('/', function (req, res, next) {
     })
 });
 
-
+/* POST */
+router.post('/', function (req, res, next) {
+    Categoria_Controller.ingresar_categoria(req.body).then(()=>{
+        Categoria_Controller.ver_categorias().then((resultados)=>{
+            res.json(resultados);
+        }).catch((error)=>{
+            res.status(500).send(error)
+        })
+    })
+});
 
 router.get('/equipos/:index', function (req, res, next) {
     console.log('CAT ROUTER:', req.params.index, req.body);
