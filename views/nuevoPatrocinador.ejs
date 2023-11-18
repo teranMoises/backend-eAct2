@@ -21,6 +21,17 @@
           <input type="radio" value="<%= patrocinios[i].id_patrocinio %>" name="idPatrocinio" required><br>
         <% } %>
 
+
+        <p>Si usted desea ser un Padrino debe escoger un equipo para poder patrocinar, 
+          para ver los equipos disponibles revise <a href="/equipo/verEquipos">Ver equipos</a> para más información</p><br>
+
+        <label>Equipos disponibles:</label>
+
+        <%  for (let i = 0; i < equipos.length; i++) { %>
+          <label><%= equipos[i].nombre_de_equipo %></label>
+          <input type="radio" value="<%= equipos[i].id_equipo %>" name="idEquipo" required><br>
+        <% } %>
+
         <label id="titulo">Comentario (Opcional)</label>
         <input type="text" placeholder="comentario" name="comentario"><br>
         <input type="submit">
