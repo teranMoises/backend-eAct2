@@ -96,13 +96,14 @@ class CategoriaModel {
     ingresar_categoria(categoria) {
         return new Promise((resolve, reject) => {
             let Nueva_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio)
-            connection.query('INSERT INTO `categorias` SET ?',Nueva_categoria, function(err, rows, fields) {
-                if (err){
-                   reject("La conexión a la base de datos a fallado")
-                }else {
-                    resolve()  
+            connection.query('INSERT INTO `categorias` SET ?', Nueva_categoria, function (err, rows, fields) {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log(rows);
+                    resolve(rows);
                 }
-            }) 
+            })
         })
     }
     editar_categoria(id, categoria) {
@@ -114,9 +115,9 @@ class CategoriaModel {
             }
         }
         return new Promise((resolve, reject) => {
-            console.log("en models", id, categoria);
+            //console.log("en models", id, categoria);
             let act_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio);
-            console.log('clase', act_categoria)
+            //console.log('clase', act_categoria)
             let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [act_categoria, id], function (error, results, fields) {
                 if (error) reject(error);
                 //console.log('ACTUALIZAR: \n', results);
@@ -142,7 +143,7 @@ class CategoriaModel {
             }
         }
         return new Promise((resolve, reject) => {
-            console.log("en models", id, actualizar);
+            //console.log("en models", id, actualizar);
             let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [actualizar, id], function (error, results, fields) {
                 if (error) reject(error);
                 //console.log('ACTUALIZAR: \n', results);
