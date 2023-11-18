@@ -2,11 +2,11 @@ const connection = require('../config/conexion');
 
 class Equipo{
     constructor(representante, email, telefono, nombre_de_equipo, participantes, comentario){
-        this.representante = representante,
-        this.email = email,
-        this.telefono = telefono,
-        this.nombre_de_equipo = nombre_de_equipo,
-        this.participantes = participantes,
+        this.representante = representante;
+        this.email = email;
+        this.telefono = telefono;
+        this.nombre_de_equipo = nombre_de_equipo;
+        this.participantes = participantes;
         this.comentario = comentario
     }
 }

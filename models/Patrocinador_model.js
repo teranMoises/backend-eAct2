@@ -2,10 +2,10 @@ const connection = require('../config/conexion');
 
 class Patrocinador{
     constructor(nombre_comercial, persona_de_contacto, telefono, idPatrocinio, comentario){
-        this.nombre_comercial = nombre_comercial,
-        this.persona_de_contacto = persona_de_contacto,
-        this.telefono = telefono,
-        this.idPatrocinio = idPatrocinio,
+        this.nombre_comercial = nombre_comercial;
+        this.persona_de_contacto = persona_de_contacto;
+        this.telefono = telefono;
+        this.idPatrocinio = idPatrocinio;
         this.comentario = comentario
     }
 }
