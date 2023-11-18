@@ -105,7 +105,35 @@ class CategoriaModel {
             }) 
         })
     }
-    editar_categoria(id, actualizar) {
+    editar_categoria(id, categoria) {
+        const buscar = async (id_cat_up, bien, mal) => {
+            try {
+                bien(await this.buscar_categoria_id(id_cat_up));
+            } catch (error) {
+                mal(error);
+            }
+        }
+        return new Promise((resolve, reject) => {
+            console.log("en models", id, categoria);
+            let act_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio);
+            console.log('clase', act_categoria)
+            let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [act_categoria, id], function (error, results, fields) {
+                if (error) reject(error);
+                //console.log('ACTUALIZAR: \n', results);
+                if (results.affectedRows < 1) {
+                    console.log('La categoría "' + id + '" no existe');
+                    reject('No existe ninguna categoría con el ID indicado: ' + id);
+                }
+                if (results.changedRows < 1) {
+                    resolve('No se modificó la categoría "' + id + '", debido a que los datos ingresados son iguales.');
+                }
+                //resolve('Se ha modificado la categoría "' + id + '" (' + actualizar.nombre_categoria + ')');
+                buscar(id, resolve, reject);
+            });
+            //console.log("consulta", query.sql);
+        })
+    }
+    modificar_categoria(id, actualizar) {
         const buscar = async (id_cat_up, bien, mal) => {
             try {
                 bien(await this.buscar_categoria_id(id_cat_up));
@@ -115,7 +143,7 @@ class CategoriaModel {
         }
         return new Promise((resolve, reject) => {
             console.log("en models", id, actualizar);
-            let query = connection.query('UPDATE `categorias` SET nombre_categoria = ? WHERE id_categoria = ?', [actualizar.nombre_categoria, id], function (error, results, fields) {
+            let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [actualizar, id], function (error, results, fields) {
                 if (error) reject(error);
                 //console.log('ACTUALIZAR: \n', results);
                 if (results.affectedRows < 1) {

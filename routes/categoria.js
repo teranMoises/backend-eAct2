@@ -53,6 +53,19 @@ router.put('/:editar', function (req, res, next) {
         })
 });
 
+router.patch('/:editar', function (req, res, next) {
+    //console.log('en routes', req.params.editar, req.body);
+    Categoria_Controller.modificar_categoria(req.params.editar, req.body)
+        .then((resultados) => {
+            //console.info(resultados);
+            res.send(resultados);
+        })
+        .catch((error) => {
+            //console.info(error);
+            res.status(404).send(error);
+        })
+});
+
 
 
 module.exports = router; 
