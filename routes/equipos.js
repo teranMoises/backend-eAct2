@@ -55,3 +55,14 @@ router.delete('/sin_categoria/:index/:index2',function(req, res, next){
     }) 
 });  
 module.exports = router; 
+
+
+router.put('/:editar', function (req, res, next) {
+    Equipos_Controller.editar_equipo(req.params.editar, req.body)
+        .then((resultados) => {
+            res.send(resultados);
+        })
+        .catch((error) => {
+            res.status(404).send(error);
+        })
+});

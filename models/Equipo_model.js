@@ -80,7 +80,15 @@ class EquipoModel{
         })
     }
     editar_equipo(id, actualizar){
-
+        return new Promise((resolve, reject) => {
+            connection.query('UPDATE equipos SET `actualizar` WHERE id_equipo = `id`' , function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve()  
+                }
+            }) 
+        })
     }
     eliminar_equipo(id){
         return new Promise((resolve, reject) => {
