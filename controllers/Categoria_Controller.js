@@ -47,7 +47,10 @@ class CategoriaController {
             }
         })
     }
-    eliminar_categoria(id) {
+    eliminar_categoria(id){
+        return new Promise((resolve, reject)=>{
+            Categoria_model.eliminar_categoria(id).then(resolve()).catch((error)=>{reject(error)});  
+        }) 
     }
 }
 
