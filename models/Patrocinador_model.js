@@ -1,4 +1,5 @@
 const connection = require('../config/conexion');
+const { Respuesta, validarClass } = require('./metodos');
 
 class Patrocinador{
     constructor(nombre_comercial, persona_de_contacto, telefono, idPatrocinio, comentario){
@@ -22,10 +23,10 @@ class PatrocinadorModel{
         return new Promise((resolve, reject) => {
             connection.query('SELECT `id_patrocinador`,`nombre_comercial`,`persona_de_contacto`,`telefono`,`nombre_patrocinio`,`monto`, `comentario` FROM `patrocinadores` JOIN `patrocinios` ON `idPatrocinio` = `id_patrocinio`', function(err, rows, fields) {
                 if (err){
-                    reject("La conexión a la base de datos a fallado")
+                    reject(new Respuesta(500, err, err))
                 }else {
                     if(rows.length == 0){
-                        resolve('No se encontró la información solicitada')
+                        resolve(new Respuesta(404, 'No existen patrocinadores registrados', rows))
                     }else{
                         resolve(rows)   
                     }
@@ -37,7 +38,7 @@ class PatrocinadorModel{
         return new Promise((resolve, reject) => {
             connection.query('SELECT * FROM `patrocinios`', function(err, rows, fields) {
                 if (err){
-                    reject("La conexión a la base de datos a fallado")
+                    reject(new Respuesta(500, err, err))
                 }else {
                     if(rows.length == 0){
                         resolve('No se encontró la información solicitada')
@@ -51,9 +52,12 @@ class PatrocinadorModel{
     ingresar_patrocinador(patrocinador){
         return new Promise((resolve, reject) => {
             let Nuevo_patrocinador = new Patrocinador(patrocinador.nombre_comercial, patrocinador.persona_de_contacto, patrocinador.telefono, patrocinador.idPatrocinio, patrocinador.comentario)
+            if (validarClass(Nuevo_patrocinador, reject) !== true) return;
             connection.query('INSERT INTO `patrocinadores` SET ?',Nuevo_patrocinador, function(err, rows, fields) {
                 if (err){
-                    reject("La conexión a la base de datos a fallado")
+                    if (err.errno == 1062) { reject(new Respuesta(400, err.sqlMessage.substring(16).replace('for key', 'ya existe como'), err)); }
+                    else if (err.errno == 1048) { reject(new Respuesta(400, "No ingresó nungún dato en: " + err.sqlMessage.substring(7).replace(' cannot be null', ''), err)); }
+                    else { reject(new Respuesta(500, err, err)) }
                 }else {
                     if(patrocinador.idPatrocinio == 5){
                         let retorna = {idEquipo: patrocinador.idEquipo, idPatrocinador: rows.insertId}
@@ -68,11 +72,13 @@ class PatrocinadorModel{
     ingresar_padrino(patrocinador){
         return new Promise((resolve, reject) => {
             let Nuevo_padrino = new Padrino(patrocinador.idEquipo, patrocinador.idPatrocinador)
+            if (validarClass(Nuevo_padrino, reject) !== true) return;
             connection.query('INSERT INTO `padrinos` SET ?',Nuevo_padrino, function(errFinal, rowsFinal, fieldsFinal) {
                 if (errFinal){
-                    reject("La conexión a la base de datos a fallado")
-                }else {
-                    resolve()
+                    reject(new Respuesta(500, errFinal, errFinal));
+                }
+                if (rowsFinal) {
+                    if (rowsFinal.affectedRows > 0) console.log("Patrocinio exitoso", rowsFinal.insertId);
                 }
             })   
         })

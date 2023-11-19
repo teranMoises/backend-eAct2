@@ -9,7 +9,7 @@ router.get('/', function(req, res, next){
    Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
       res.json(resultados);
    }).catch((error)=>{
-      res.status(500).send(error)
+      res.status(error.codigo).send(error.mensaje);
    })
 }); 
 
