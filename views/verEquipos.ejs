@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+<%-include("templates/header",{mainTitle:"UVM|Robotica|Equipos"})%>
   <body>
+    <%-include("partials/nav")%>
     <h1><%= title %></h1>
     <% if(equipos.length) { %>
       <%  for (let i = 0; i < equipos.length; i++) { %>

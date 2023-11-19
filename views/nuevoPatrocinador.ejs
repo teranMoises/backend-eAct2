@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+<%-include("templates/header",{mainTitle:"UVM|Robotica|Patrocinador"})%>
+
+  
   <body>
+    <%-include("partials/nav")%>
+
     <h1><%= title %></h1>
     <form action method="post">
         <label id="titulo">Nombre Comercial</label>
