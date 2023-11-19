@@ -1,4 +1,5 @@
 const Categoria_model = require('../models/Categoria_model');
+const { Respuesta } = require('../models/metodos');
 
 class CategoriaController {
     ver_categorias() {
@@ -9,7 +10,7 @@ class CategoriaController {
         })
     }
     ver_equipos_por_categoria(id, body) {
-        console.log('CAT controller:', id, body);
+        //console.log('CAT controller:', id, body);
         return new Promise((resolve, reject) => {
             Categoria_model.ver_equipos_por_categoria(id, body)
                 .then((resultado) => { resolve(resultado) })
@@ -31,7 +32,7 @@ class CategoriaController {
                     .then((retorno) => { resolve(retorno) })
                     .catch((error) => { reject(error); })
             } else {
-                return reject('No se ingresó una ID válido');
+                return reject(new Respuesta(400, 'No se ingresó un ID válido: ' + id, id));
             }
         })
     }
@@ -43,14 +44,20 @@ class CategoriaController {
                     .then((retorno) => { resolve(retorno) })
                     .catch((error) => { reject(error); })
             } else {
-                return reject('No se ingresó una ID válido');
+                return reject(new Respuesta(400, 'No se ingresó un ID válido: ' + id, id));
             }
         })
     }
-    eliminar_categoria(id){
-        return new Promise((resolve, reject)=>{
-            Categoria_model.eliminar_categoria(id).then(resolve()).catch((error)=>{reject(error)});  
-        }) 
+    eliminar_categoria(id) {
+        return new Promise((resolve, reject) => {
+            if (id != undefined && !isNaN(Number(id))) {
+                Categoria_model.eliminar_categoria(id)
+                    .then((resultados) => { resolve(resultados) })
+                    .catch((error) => { reject(error) });
+            } else {
+                return reject(new Respuesta(400, 'No se ingresó un ID válido: ' + id, id));
+            }
+        })
     }
 }
 

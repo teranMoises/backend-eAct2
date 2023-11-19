@@ -94,7 +94,7 @@ class EquipoModel {
     ingresar_equipo(equipo) {
         return new Promise((resolve, reject) => {
             let Nuevo_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario);
-            if (validarClass(Nuevo_equipo, reject, [], 400) !== true) return;
+            if (validarClass(Nuevo_equipo, reject, ["comentario"], 400) !== true) return;
             connection.query('INSERT INTO `equipos` SET ?', Nuevo_equipo, function (err, rows, fields) {
                 if (err) {
                     if (err.errno == 1062) { reject(new Respuesta(400, err.sqlMessage.substring(16).replace('for key', 'ya existe como'), err)); }
@@ -116,8 +116,7 @@ class EquipoModel {
                 connection.query('INSERT INTO `inscripciones` SET ?', Nueva_inscripcion, function (errFinal, rowsFinal, fieldsFinals) {
                     if (errFinal) {
                         reject(new Respuesta(500, errFinal, errFinal));
-                    }
-                    if (rowsFinal) {
+                    }else if (rowsFinal) {
                         if (rowsFinal.affectedRows > 0) console.log("Inscripcion exitosa", rowsFinal.insertId);
                     }
                 })
@@ -128,7 +127,7 @@ class EquipoModel {
     editar_equipo(id, equipo) {
         return new Promise((resolve, reject) => {
             let Editar_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario);
-            if (validarClass(Editar_equipo, reject, [], 400) !== true) return;
+            if (validarClass(Editar_equipo, reject, ["comentario"], 400) !== true) return;
             connection.query('UPDATE `equipos` SET ? WHERE id_equipo = ?', [Editar_equipo, id], function (err, rows, fields) {
                 if (err) {
                     reject(new Respuesta(500, err, err));
