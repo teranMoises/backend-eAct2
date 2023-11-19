@@ -16,22 +16,26 @@ class CategoriaModel {
         return new Promise((resolve, reject) => {
             connection.query('SELECT * FROM `categorias`', function (err, rows, fields) {
                 if (err) {
-                    reject("La conexión a la base de datos a fallado")
-                } else {
-                    resolve(rows)
+                    reject(new Respuesta(500, err, err));
+                } else if (rows) {
+                    if (rows.length == 0) {
+                        reject(new Respuesta(404, 'No existen equipos registrados', rows));
+                    } else {
+                        resolve(rows)
+                    }
                 }
             })
         })
     }
     buscar_categoria(id_cat_URI, nom_cat_body) {
-        //FALTA   Validar que sea un numero
         return new Promise((resolve, reject) => {
             if (nom_cat_body == null) { console.log('No por body'); resolve(id_cat_URI) }
-            if (id_cat_URI == null) {
+            if (id_cat_URI == null && typeof nom_cat_body == "object" && Object.keys(nom_cat_body).length > 0) {
                 let consulta = connection.query('SELECT * FROM `categorias` WHERE ?', nom_cat_body, function (error, results, fields) {
                     if (error) {
-                        console.error("Error SQL: ", error);
-                        reject(error);
+                        //console.error("Error SQL: ", error);
+                        reject(new Respuesta(500, error, error));
+                        return
                     };
                     if (results.length > 0) {
                         //console.log("ENCONTRADO", results);
@@ -39,22 +43,22 @@ class CategoriaModel {
                         resolve(results[0].id_categoria);
                     } else {
                         //console.error("Error: No se encontraron coincidencias", results);
-                        reject("Error: No se encontraron coincidencias");
+                        reject(new Respuesta(404, "No se encontraron categorías con esas propiedades", results));
                     };
                 });
                 //console.log(consulta.sql)
             } else {
-                reject('No ingresó ningún dato');
+                reject(new Respuesta(400, 'Error: No ingresó ningún dato', null));
             }
         })
     }
     buscar_categoria_id(id_cat) {
         return new Promise((resolve, reject) => {
-            if (isNaN(Number(id_cat))) reject('Ingresó un ID inválido: ' + id_cat);
+            if (isNaN(Number(id_cat))) reject(new Respuesta(400, 'Ingresó un ID inválido: ' + id_cat, null));
             connection.query('SELECT * FROM `categorias` WHERE ?', { id_categoria: id_cat }, function (error, results, fields) {
                 if (error) {
                     console.error("Error SQL: ", error);
-                    reject(error);
+                    reject(new Respuesta(500, error, error));
                 };
                 if (results.length > 0) {
                     //console.log("ENCONTRADO", results);
@@ -62,7 +66,7 @@ class CategoriaModel {
                     //resolve(results[0].id_categoria);
                 } else {
                     //console.error("Error: No se encontraron coincidencias", results);
-                    reject("Error: No se encontraron coincidencias");
+                    reject(new Respuesta(400, "Error: No se encontraron coincidencias", results));
                 };
             });
         })
@@ -75,33 +79,35 @@ class CategoriaModel {
             try {
                 let id = await this.buscar_categoria(id_cat, nom_cat);
                 console.log('CAT buscar:', id);
-                if (isNaN(Number(id))) reject(id);
+                if (isNaN(Number(id))) reject(new Respuesta(400, "Error! Se introdujo un ID inválido: " + id, id));
                 connection.query('SELECT `nombre_categoria`,`id_equipo`,`representante`, `email`, `telefono`, `nombre_de_equipo`, `participantes`, `comentario` FROM `inscripciones` JOIN `categorias` ON `id_categoria` = `idCategoria` JOIN `equipos` ON `id_equipo` = `idEquipo` WHERE `id_categoria` = ?', id, function (err, rows, fields) {
                     if (err) {
-                        reject(err);
+                        reject(new Respuesta(500, err, err));
                     } else {
                         //console.log('RESULTADOS',rows, rows.length)
                         if (rows.length < 1) {
                             //console.log('VACIO')
-                            reject('No se encontró la información solicitada');
+                            reject(new Respuesta(404, 'No se encontraron equipos inscritos en la categoría indicada', rows));
                         }
                         resolve(rows);
                     }
                 })
             } catch (error) {
-                console.log(error);
-                reject(error);
+                console.error(error.codigo);
+                reject(new Respuesta(error.codigo, error.mensaje, error.resultado));
             }
         })
     }
     ingresar_categoria(categoria) {
         return new Promise((resolve, reject) => {
             let Nueva_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio)
-            if (validarClass(Nueva_categoria, reject,[], 400) !== true) return;
+            if (validarClass(Nueva_categoria, reject, [], 400) !== true) return;
             connection.query('INSERT INTO `categorias` SET ?', Nueva_categoria, function (err, rows, fields) {
                 if (err) {
-                    reject(err);
-                } else {
+                    if (err.errno == 1062) { reject(new Respuesta(400, err.sqlMessage.substring(16).replace('for key', 'ya existe como'), err)); }
+                    else if (err.errno == 1048) { reject(new Respuesta(400, "No ingresó nungún dato en: " + err.sqlMessage.substring(7).replace(' cannot be null', ''), err)); }
+                    else { reject(new Respuesta(500, err, err)) }
+                } else if (rows) {
                     console.table(rows);
                     resolve(rows);
                 }

@@ -9,7 +9,7 @@ class CategoriaController {
         })
     }
     ver_equipos_por_categoria(id, body) {
-        console.log('CAT controller:', id, body);
+        //console.log('CAT controller:', id, body);
         return new Promise((resolve, reject) => {
             Categoria_model.ver_equipos_por_categoria(id, body)
                 .then((resultado) => { resolve(resultado) })
