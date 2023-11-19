@@ -8,31 +8,31 @@ router.get('/', function (req, res, next) {
     Modalidad_Controller.ver_modalidad()
         .then((resultados) => {
             //console.log('router bien')
-            res.send(resultados);
+            res.send(resultados.resultado);
         })
         .catch((error) => {
             //console.log('router mal')
-            res.status(404).send(error);
+            res.status(error.codigo).send(error.mensaje);
         })
 });
 router.get('/:index', function (req, res, next) {
-    Modalidad_Controller.ver_modalidad_y_categoria(req.params.index).then((resultados)=>{
-        res.json(resultados);
-    }).catch((error)=>{
-        res.status(404).send(error)
+    Modalidad_Controller.ver_modalidad_y_categoria(req.params.index)
+    .then((resultados) => {
+        res.send(resultados.resultado);
+    })
+    .catch((error) => {
+        res.status(error.codigo).send(error.mensaje);
     })
 }); 
 router.post('/', function (req, res, next) {
     //console.log('en routes', req.body);
     Modalidad_Controller.ingresar_modalidad(req.body)
-        .then((resultados) => {
-            console.info(resultados);
-            res.send(resultados);
-        })
-        .catch((error) => {
-            //console.info(error);
-            res.status(400).send(error);
-        })
+    .then((resultados) => {
+        res.send(resultados.resultado);
+    })
+    .catch((error) => {
+        res.status(error.codigo).send(error.mensaje);
+    })
 });
 
 module.exports = router; 

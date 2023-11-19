@@ -1,4 +1,5 @@
 const connection = require('../config/conexion');
+const { Respuesta, validarClass } = require('./metodos');
 
 class Modalidad {
     constructor(nombre) {
@@ -12,12 +13,16 @@ class ModalidadModel {
         return new Promise((resolve, reject) => {
             connection.query('SELECT * FROM `modalidades`', function (error, results, fields) {
                 if (error) {
-                    reject(error)
+                    reject(new Respuesta(500, error, error));
                 } else {
-                    resolve(results)
+                    if (results.length == 0) {
+                        reject(new Respuesta(404, 'No existen modalidades registradas', results));
+                    } else {
+                        resolve(new Respuesta(200, results, results));
+                    }
                 };
 
-                console.log('models', results);
+                //console.log('models', results);
             });
         })
     }
@@ -25,25 +30,35 @@ class ModalidadModel {
         return new Promise((resolve, reject) => {
             console.log("en models", modalidad);
             let Nueva_modalidad = new Modalidad(modalidad.nombre_modalidad);
+            if (validarClass(Nueva_modalidad, reject, [], 400) !== true) return;
             let query = connection.query('INSERT INTO modalidades SET ?', Nueva_modalidad, function (error, results, fields) {
-                if (error) {console.error(error); reject(error)};
-                if (results) {
+                if (error) {
+                    if (error.errno == 1062) { reject(new Respuesta(400, error.sqlMessage.substring(16).replace('for key', 'ya existe como'), error)); }
+                    else if (error.errno == 1048) { reject(new Respuesta(400, "No ingresó nungún dato en: " + error.sqlMessage.substring(7).replace(' cannot be null', ''), error)); }
+                    else { reject(new Respuesta(500, error, error)) }
+                } else if (results) {
                     console.log('ID CREADO:', results.insertId);
-                    resolve(results);
-                };
+                    resolve(new Respuesta(200, results, results));
+                }
             });
             console.log(query.sql);
         })
     }
-    ver_modalidad_y_categoria(id){
-        return new Promise((resolve, reject)=>{
-            connection.query('SELECT `id_modalidad`,`nombre_modalidad`,`id_categoria`,`nombre_categoria` FROM `categorias` JOIN `modalidades` ON `id_modalidad` = `idModalidad` WHERE `id_modalidad`=?', id, function(error, results,fields){
-                if (error){
-                    reject("La conexión a la base de datos a fallado")
-                }else{
-                    resolve(results)
-                };
-                
+    ver_modalidad_y_categoria(id) {
+        return new Promise((resolve, reject) => {
+            if (isNaN(Number(id))) {
+                reject("Ingresó un ID inválido: " + id);
+            }
+            connection.query('SELECT `id_modalidad`,`nombre_modalidad`,`id_categoria`,`nombre_categoria` FROM `categorias` JOIN `modalidades` ON `id_modalidad` = `idModalidad` WHERE `id_modalidad`=?', id, function (error, results, fields) {
+                if (error) {
+                    reject(new Respuesta(500, error, error));
+                } else {
+                    if (results.length == 0) {
+                        reject(new Respuesta(404, 'No se encontraron modalidades', results));
+                    } else {
+                        resolve(new Respuesta(200, results, results));
+                    }
+                }
             })
         })
     }
