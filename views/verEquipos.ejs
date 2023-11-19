@@ -11,11 +11,14 @@
         <h2> <%= equipos[i].nombre_de_equipo %> </h2>
         <ul>
         <li> Representante: <%= equipos[i].representante %> </li> 
-        <li> Modalidad: <%= equipos[i].modalidad %> </li> 
+        <li> Modalidad: <%= equipos[i].nombre_modalidad %> </li> 
         <li> Email: <%= equipos[i].email %> </li> 
         <li> Teléfono: <%= equipos[i].telefono %> </li> 
         <li><strong>Participantes: </strong></li>
-        <li> <%= equipos[i].participantes %> </li> 
+        <%= equipos[i].participantes %>
+        <li><strong>Comentarios: </strong></li>
+        <%= equipos[i].comentario %>
+        </ul>
         <% } %>
     <% } %>
   </body>
