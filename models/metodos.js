@@ -7,7 +7,7 @@ class Respuesta {
 }
 
 
-function validarClass(clase, detener, excluir = []) {
+function validarClass(clase, detener, excluir = [], codeError = 0) {
     if (!Array.isArray(excluir)) { excluir = []; console.error("No ingresó un array en 'excluir'") };
     let faltantes = "No ingresó ningún valor en: ";
     for (const propiedad in clase) {
@@ -22,8 +22,12 @@ function validarClass(clase, detener, excluir = []) {
     faltantes = faltantes.substring(0, faltantes.length - 2);
     if (faltantes.length > 26) {
         console.log("Error clase.", faltantes);
-        detener(faltantes);
-        return faltantes;
+        if (codeError != 0) {
+            detener(new Respuesta(codeError, faltantes, null))
+        } else {
+            detener(faltantes);
+            return faltantes;
+        }
     }
     console.log("Aprobado (clase).");
     return true;
