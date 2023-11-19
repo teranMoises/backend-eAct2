@@ -19,17 +19,23 @@ class EquipoController {
                         try {
                             let catEqu = await Equipo_model.ver_cat_equipos(equipo.id_equipo);
                             //console.table(catEqu);
-                            if (catEqu === null) { reject("Error: " + equipo.nombre_de_equipo + " no tiene categorías/modalidad"); return };
-                            if (!catEqu[0].nombre_categoria || !catEqu[0].nombre_modalidad) { reject("Error categorías/modalidad"); return };
-                            for (const cat of catEqu) {
-                                modalidad += `${cat.nombre_categoria} (${cat.nombre_modalidad}); `;
+                            if (!catEqu[0].nombre_categoria || !catEqu[0].nombre_modalidad) { console.error("Error categorías/modalidad en:", equipo.nombre_de_equipo); } 
+                            else {
+                                for (const cat of catEqu) {
+                                    modalidad += `${cat.nombre_categoria} (${cat.nombre_modalidad}); `;
+                                }
                             }
                             modalidad = modalidad.substring(0, modalidad.length - 2);
                             equipo.nombre_modalidad = modalidad;
                             //console.log(equipo.nombre_modalidad);
                         } catch (error) {
-                            console.error("Error leyendo cat");
-                            reject(error);
+                            if (error === null) { 
+                                console.error("Error: el equipo '" + equipo.nombre_de_equipo + "' no tiene categorías/modalidades"); 
+                                equipo.nombre_modalidad = "No tiene modalidades registradas.";
+                            } else {
+                                console.error("Error leyendo categorías de:", equipo.nombre_de_equipo, error);
+                                //reject(error);
+                            }   
                         }
                     }
                     //console.table(resultado)
@@ -43,10 +49,10 @@ class EquipoController {
             Equipo_model.ver_padrinos().then((resultado) => { resolve(resultado) }).catch((error) => { reject(error) });
         })
     }
-    ver_equipos_sin_padrino(){
-        return new Promise((resolve, reject)=>{
-            Equipo_model.ver_equipos_sin_padrino().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
-        }) 
+    ver_equipos_sin_padrino() {
+        return new Promise((resolve, reject) => {
+            Equipo_model.ver_equipos_sin_padrino().then((resultado) => { resolve(resultado) }).catch((error) => { reject(error) });
+        })
     }
     ingresar_equipo(equipo) {
         return new Promise((resolve, reject) => {
