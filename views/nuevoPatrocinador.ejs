@@ -27,7 +27,7 @@
     
             <%  for (let i = 0; i < equipos.length; i++) { %>
               <label><%= equipos[i].nombre_de_equipo %></label>
-              <input type="radio" value="<%= equipos[i].id_equipo %>" name="idEquipo" required><br>
+              <input type="radio" value="<%= equipos[i].id_equipo %>" name="idEquipo"><br>
             <% } %>
 
           <% } else if(patrocinios[i].id_patrocinio != 5 ) {%>
