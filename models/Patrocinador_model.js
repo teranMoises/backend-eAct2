@@ -26,7 +26,7 @@ class PatrocinadorModel{
                     reject(new Respuesta(500, err, err))
                 }else {
                     if(rows.length == 0){
-                        resolve(new Respuesta(404, 'No existen patrocinadores registrados', rows))
+                        reject(new Respuesta(404, 'No existen patrocinadores registrados', rows))
                     }else{
                         resolve(rows)   
                     }
@@ -52,7 +52,7 @@ class PatrocinadorModel{
     ingresar_patrocinador(patrocinador){
         return new Promise((resolve, reject) => {
             let Nuevo_patrocinador = new Patrocinador(patrocinador.nombre_comercial, patrocinador.persona_de_contacto, patrocinador.telefono, patrocinador.idPatrocinio, patrocinador.comentario)
-            if (validarClass(Nuevo_patrocinador, reject) !== true) return;
+            if (validarClass(Nuevo_patrocinador, reject, ["comentario","idEquipo"]) !== true) return;
             connection.query('INSERT INTO `patrocinadores` SET ?',Nuevo_patrocinador, function(err, rows, fields) {
                 if (err){
                     if (err.errno == 1062) { reject(new Respuesta(400, err.sqlMessage.substring(16).replace('for key', 'ya existe como'), err)); }
@@ -79,6 +79,7 @@ class PatrocinadorModel{
                 }
                 if (rowsFinal) {
                     if (rowsFinal.affectedRows > 0) console.log("Patrocinio exitoso", rowsFinal.insertId);
+                    resolve()
                 }
             })   
         })
@@ -87,7 +88,7 @@ class PatrocinadorModel{
         return new Promise((resolve, reject) => {
             connection.query('DELETE FROM `patrocinadores` WHERE `id_patrocinador` = ?',id, function(err, rows, fields) {
                 if (err){
-                    reject("La conexión a la base de datos a fallado")
+                    reject(new Respuesta(500, err, err))
                 }else {
                     resolve()  
                 }
@@ -100,11 +101,19 @@ class PatrocinadorModel{
                 reject("No puedes cambiar tu modo de patrocinio porque estás financiando a un equipo")
             }else{
                 let Actualizar_patrocinador = new Patrocinador(actualizar.nombre_comercial, actualizar.persona_de_contacto, actualizar.telefono, actualizar.idPatrocinio, actualizar.comentario)
+                if (validarClass(Actualizar_patrocinador, reject, ["comentario","idEquipo"]) !== true) return;
                 connection.query('UPDATE `patrocinadores` SET ? WHERE `id_patrocinador` = ?',[Actualizar_patrocinador,id], function(err, rows, fields) {
                     if (err){
-                        reject("La conexión a la base de datos a fallado")
-                    }else {
-                        return resolve()
+                        reject(new Respuesta(500, err, err));
+                    } else if (rows) {
+                        if (rows.affectedRows < 1) {
+                            console.error('El patrocinador "' + id + '" no existe');
+                            reject(new Respuesta(404, 'No existe ningún patrocinador con el ID indicado: ' + id, rows))
+                        } else if (rows.changedRows > 0) {
+                            resolve(new Respuesta(200, "Se ha actualizado exitosamente", rows));
+                        } else {
+                            reject(new Respuesta(200, 'No se modificó el patrocinador "' + id + '", debido a que los datos ingresados son iguales.', rows));
+                        }
                     }
                 }) 
             }
@@ -114,9 +123,13 @@ class PatrocinadorModel{
         return new Promise((resolve,reject) => { 
             connection.query('SELECT * FROM `patrocinadores` WHERE `id_patrocinador` = ?',id, function(err, rows, fields) {
                 if (err){
-                    reject("La conexión a la base de datos a fallado")
+                    reject(new Respuesta(500, err, err))
                 }else {
-                    return resolve(rows)
+                    if(rows.length == 0){
+                        reject(new Respuesta(404, 'No existen patrocinadores registrados', rows))
+                    }else{
+                        resolve(rows)   
+                    }
                 }
             }) 
         })
