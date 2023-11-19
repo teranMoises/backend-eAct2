@@ -185,8 +185,16 @@ class CategoriaModel {
             //console.log("consulta", query.sql);
         })
     }
-    eliminar_categoria(id) {
-
+    eliminar_categoria(id){
+        return new Promise((resolve, reject) => {
+            connection.query('DELETE FROM `categorias` WHERE `id_categoria` = ?',id, function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve()  
+                }
+            })
+        })
     }
 }
 
