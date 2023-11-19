@@ -1,5 +1,5 @@
 class Respuesta {
-    constructor(codigo, mensaje, resultado){
+    constructor(codigo, mensaje, resultado) {
         this.codigo = codigo;
         this.mensaje = mensaje;
         this.resultado = resultado;
@@ -7,12 +7,13 @@ class Respuesta {
 }
 
 
-function validarClass(clase, detener) {
+function validarClass(clase, detener, excluir = []) {
+    if (!Array.isArray(excluir)) { excluir = []; console.error("No ingresó un array en 'excluir'") };
     let faltantes = "No ingresó ningún valor en: ";
     for (const propiedad in clase) {
         if (Object.hasOwnProperty.call(clase, propiedad)) {
             const elemento = clase[propiedad];
-            if (!elemento) {
+            if (!elemento && !excluir.includes(propiedad)) {
                 //console.log("FOR. No ingresó ningún valor en: " + propiedad)
                 faltantes += propiedad + "; ";
             }
