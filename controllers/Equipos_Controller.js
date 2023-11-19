@@ -19,7 +19,7 @@ class EquipoController {
                         try {
                             let catEqu = await Equipo_model.ver_cat_equipos(equipo.id_equipo);
                             //console.table(catEqu);
-                            if (!catEqu[0].nombre_categoria || !catEqu[0].nombre_modalidad) { console.error("Error categorías/modalidad en:", equipo.nombre_de_equipo); } 
+                            if (!catEqu[0].nombre_categoria || !catEqu[0].nombre_modalidad) { console.error("Error categorías/modalidad en:", equipo.nombre_de_equipo); }
                             else {
                                 for (const cat of catEqu) {
                                     modalidad += `${cat.nombre_categoria} (${cat.nombre_modalidad}); `;
@@ -29,13 +29,13 @@ class EquipoController {
                             equipo.nombre_modalidad = modalidad;
                             //console.log(equipo.nombre_modalidad);
                         } catch (error) {
-                            if (error === null) { 
-                                console.error("Error: el equipo '" + equipo.nombre_de_equipo + "' no tiene categorías/modalidades"); 
+                            if (error === null) {
+                                console.error("Error: el equipo '" + equipo.nombre_de_equipo + "' no tiene categorías/modalidades");
                                 equipo.nombre_modalidad = "No tiene modalidades registradas.";
                             } else {
                                 console.error("Error leyendo categorías de:", equipo.nombre_de_equipo, error);
                                 //reject(error);
-                            }   
+                            }
                         }
                     }
                     //console.table(resultado)
@@ -77,12 +77,12 @@ class EquipoController {
     }
     eliminar_equipo(id) {
         return new Promise((resolve, reject) => {
-            Equipo_model.eliminar_equipo(id).then(resolve()).catch((error) => { reject(error) });
+            Equipo_model.eliminar_equipo(id).then((resultado) => { resolve(resultado) }).catch((error) => { reject(error) });
         })
     }
     eliminar_categoria_inscrita(idEquipo, idCategoria) {
         return new Promise((resolve, reject) => {
-            Equipo_model.eliminar_categoria_inscrita(idEquipo, idCategoria).then(resolve()).catch((error) => { reject(error) });
+            Equipo_model.eliminar_categoria_inscrita(idEquipo, idCategoria).then((resultado) => { resolve(resultado) }).catch((error) => { reject(error) });
         })
     }
 }

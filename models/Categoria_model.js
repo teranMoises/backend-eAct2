@@ -1,4 +1,5 @@
 const connection = require('../config/conexion');
+const { Respuesta, validarClass } = require('./metodos');
 
 class Categoria {
     constructor(idModalidad, nombre_categoria, descripcion, reglas, premio) {
@@ -7,25 +8,6 @@ class Categoria {
         this.descripcion = descripcion;
         this.reglas = reglas;
         this.premio = premio;
-    }
-    get validar() {
-        let faltantes = "No ingresó ningún valor en: ";
-        for (const propiedad in this) {
-            if (Object.hasOwnProperty.call(this, propiedad)) {
-                const elemento = this[propiedad];
-                if (!elemento) {
-                    //console.log("FOR. No ingresó ningún valor en: " + propiedad)
-                    faltantes += propiedad + "; ";
-                }
-            }
-        }
-        faltantes = faltantes.substring(0, faltantes.length - 2);
-        if (faltantes.length > 26) { 
-            //console.log("Error constructor.", faltantes); 
-            return faltantes 
-        }
-        //console.log("Aprobado (constructor)."); 
-        return true;
     }
 }
 
@@ -115,9 +97,7 @@ class CategoriaModel {
     ingresar_categoria(categoria) {
         return new Promise((resolve, reject) => {
             let Nueva_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio)
-            let validacion = Nueva_categoria.validar;
-            console.log('Constructor.', validacion);
-            if (validacion !== true) { reject(validacion); return };
+            if (validarClass(Nueva_categoria, reject) !== true) return;
             connection.query('INSERT INTO `categorias` SET ?', Nueva_categoria, function (err, rows, fields) {
                 if (err) {
                     reject(err);
@@ -139,9 +119,7 @@ class CategoriaModel {
         return new Promise((resolve, reject) => {
             //console.log("en models", id, categoria);
             let act_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio);
-            let validacion = act_categoria.validar;
-            console.log('Constructor.', validacion);
-            if (validacion !== true) { reject(validacion); return };
+            if (validarClass(act_categoria, reject) !== true) return;
             let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [act_categoria, id], function (error, results, fields) {
                 if (error) { reject(error); return }
                 console.log('\n ACTUALIZAR: '); console.table(results);
@@ -185,13 +163,13 @@ class CategoriaModel {
             //console.log("consulta", query.sql);
         })
     }
-    eliminar_categoria(id){
+    eliminar_categoria(id) {
         return new Promise((resolve, reject) => {
-            connection.query('DELETE FROM `categorias` WHERE `id_categoria` = ?',id, function(err, rows, fields) {
-                if (err){
+            connection.query('DELETE FROM `categorias` WHERE `id_categoria` = ?', id, function (err, rows, fields) {
+                if (err) {
                     reject("La conexión a la base de datos a fallado")
-                }else {
-                    resolve()  
+                } else {
+                    resolve()
                 }
             })
         })

@@ -8,7 +8,7 @@ router.get('/', function (req, res, next) {
     Equipos_Controller.ver_equipos().then((resultados) => {
         res.json(resultados);
     }).catch((error) => {
-        res.status(500).send(error)
+        res.status(error.codigo).send(error.mensaje);
     })
 });
 
@@ -20,22 +20,22 @@ router.post('/', function (req, res, next) {
             Equipos_Controller.ver_equipos().then((resultados) => {
                 res.json(resultados);
             }).catch((error) => {
-                res.status(500).send(error)
+                res.status(error.codigo).send(error.mensaje);
             })
         }).catch((error) => {
-            res.status(500).send(error)
+            res.status(error.codigo).send(error.mensaje);
         })
     }).catch((error) => {
-        res.status(500).send(error)
+        res.status(error.codigo).send(error.mensaje);
     })
 });
 
 /* DELETE */
 router.delete('/:index', function (req, res, next) {
-    Equipos_Controller.eliminar_equipo(req.params.index).then(() => {
-        res.json();
+    Equipos_Controller.eliminar_equipo(req.params.index).then((resultados) => {
+        res.status(resultados.codigo).send(resultados.mensaje);
     }).catch((error) => {
-        res.status(500).send(error)
+        res.status(error.codigo).send(error.mensaje);
     })
 });
 
@@ -45,15 +45,15 @@ router.get('/padrinos', function (req, res, next) {
     Equipos_Controller.ver_padrinos().then((resultados) => {
         res.json(resultados);
     }).catch((error) => {
-        res.status(500).send(error)
+        res.status(error.codigo).send(error.mensaje);
     })
 });
 
 router.delete('/sin_categoria/:index/:index2', function (req, res, next) {
-    Equipos_Controller.eliminar_categoria_inscrita(req.params.index, req.params.index2).then(() => {
-        res.json();
+    Equipos_Controller.eliminar_categoria_inscrita(req.params.index, req.params.index2).then((resultados) => {
+        res.status(resultados.codigo).send(resultados.mensaje);
     }).catch((error) => {
-        res.status(500).send(error)
+        res.status(error.codigo).send(error.mensaje);
     })
 });
 
@@ -77,12 +77,12 @@ router.get('/verEquipo', function (req, res, next) {
 router.put('/editar_equipo/:editar', function (req, res, next) {
     Equipos_Controller.editar_equipo(req.params.editar, req.body)
         .then((resultados) => {
-            res.send(resultados);
+            res.status(resultados.codigo).send(resultados.mensaje);
         })
         .catch((error) => {
-            res.status(404).send(error);
+            res.status(error.codigo).send(error.mensaje);
         })
-        console.table(req.body)
+    console.table(req.body)
 });
 
 module.exports = router; 
