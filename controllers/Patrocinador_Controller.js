@@ -23,12 +23,12 @@ class PatrocinadorController{
     }
     eliminar_patrocinador(id){
         return new Promise((resolve, reject)=>{
-            Patrocinador_Model.eliminar_patrocinador(id).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
+            Patrocinador_Model.eliminar_patrocinador(id).then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
         })
     }
     editar_patrocinador(idViejo,id, actualizar){
         return new Promise((resolve, reject)=>{
-            Patrocinador_Model.editar_patrocinador(idViejo,id,actualizar).then(()=>{resolve()}).catch((error)=>{reject(error)});  
+            Patrocinador_Model.editar_patrocinador(idViejo,id,actualizar).then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)});  
         }) 
     }
     buscar_patrocinador(id){

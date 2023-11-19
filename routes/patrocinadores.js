@@ -9,7 +9,7 @@ router.get('/', function(req, res, next){
    Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
       res.json(resultados);
    }).catch((error)=>{
-      res.status(500).send(error)
+      res.status(error.codigo).send(error.mensaje);
    })
 }); 
 
@@ -50,8 +50,8 @@ router.post('/', function (req, res, next) {
 /* DELETE */
 
 router.delete('/:index', function (req ,res , next) {
-   Patrocinador_Controller.eliminar_patrocinador(req.params.index).then(()=>{
-      res.json();
+   Patrocinador_Controller.eliminar_patrocinador(req.params.index).then((resultado)=>{
+      res.json(resultado);
    }).catch((error)=>{
       res.status(500).send(error)
    })
@@ -60,12 +60,8 @@ router.delete('/:index', function (req ,res , next) {
 /* PUT */
 router.put('/:index', function (req, res, next) {
    Patrocinador_Controller.buscar_patrocinador(req.params.index).then((resultado)=>{
-      Patrocinador_Controller.editar_patrocinador(resultado[0].idPatrocinio,req.params.index, req.body).then(()=>{
-         Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
-            res.json(resultados);
-         }).catch((error)=>{
-            res.status(500).send(error)
-         }) 
+      Patrocinador_Controller.editar_patrocinador(resultado[0].idPatrocinio,req.params.index, req.body).then((resultado)=>{
+         res.json(resultado);
       }).catch((error)=>{
          res.status(500).send(error)
       })
