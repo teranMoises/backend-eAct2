@@ -88,16 +88,29 @@ class PatrocinadorModel{
             })
         })  
     }
-    editar_patrocinador(id,actualizar){
+    editar_patrocinador(idViejo,id,actualizar){
+        return new Promise((resolve, reject) => { 
+            if(idViejo == 5 && actualizar.idPatrocinio != 5){
+                reject("No puedes cambiar tu modo de patrocinio porque estás financiando a un equipo")
+            }else{
+                let Actualizar_patrocinador = new Patrocinador(actualizar.nombre_comercial, actualizar.persona_de_contacto, actualizar.telefono, actualizar.idPatrocinio, actualizar.comentario)
+                connection.query('UPDATE `patrocinadores` SET ? WHERE `id_patrocinador` = ?',[Actualizar_patrocinador,id], function(err, rows, fields) {
+                    if (err){
+                        reject("La conexión a la base de datos a fallado")
+                    }else {
+                        return resolve()
+                    }
+                }) 
+            }
+        })
+    }
+    buscar_patrocinador(id){
         return new Promise((resolve,reject) => { 
-            let Actualizar_patrocinador = new Patrocinador(actualizar.nombre_comercial, actualizar.persona_de_contacto, 
-   actualizar.telefono, actualizar.idPatrocinio, actualizar.comentario)
-            connection.query('UPDATE `patrocinadores` SET ? WHERE `id_patrocinador` = ?',[Actualizar_patrocinador,id], function
-   (err, rows, fields) {
+            connection.query('SELECT * FROM `patrocinadores` WHERE `id_patrocinador` = ?',id, function(err, rows, fields) {
                 if (err){
                     reject("La conexión a la base de datos a fallado")
                 }else {
-                    return resolve()
+                    return resolve(rows)
                 }
             }) 
         })

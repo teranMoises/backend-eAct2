@@ -59,13 +59,20 @@ router.delete('/:index', function (req ,res , next) {
 
 /* PUT */
 router.put('/:index', function (req, res, next) {
-   Patrocinador_Controller.editar_patrocinador(req.params.index, req.body).then(()=>{
-      Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
-         res.json(resultados);
+   Patrocinador_Controller.buscar_patrocinador(req.params.index).then((resultado)=>{
+      Patrocinador_Controller.editar_patrocinador(resultado[0].idPatrocinio,req.params.index, req.body).then(()=>{
+         Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
+            res.json(resultados);
+         }).catch((error)=>{
+            res.status(500).send(error)
+         }) 
       }).catch((error)=>{
          res.status(500).send(error)
       })
+   }).catch((error)=>{
+      res.status(500).send(error)
    })
+
 }); 
 
 /* VIEWS */
