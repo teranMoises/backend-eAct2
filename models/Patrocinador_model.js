@@ -52,7 +52,7 @@ class PatrocinadorModel{
     ingresar_patrocinador(patrocinador){
         return new Promise((resolve, reject) => {
             let Nuevo_patrocinador = new Patrocinador(patrocinador.nombre_comercial, patrocinador.persona_de_contacto, patrocinador.telefono, patrocinador.idPatrocinio, patrocinador.comentario)
-            if (validarClass(Nuevo_patrocinador, reject, ["comentario","idEquipo"]) !== true) return;
+            if (validarClass(Nuevo_patrocinador, reject, ["comentario","idEquipo"], 400) !== true) return;
             connection.query('INSERT INTO `patrocinadores` SET ?',Nuevo_patrocinador, function(err, rows, fields) {
                 if (err){
                     if (err.errno == 1062) { reject(new Respuesta(400, err.sqlMessage.substring(16).replace('for key', 'ya existe como'), err)); }
@@ -72,7 +72,7 @@ class PatrocinadorModel{
     ingresar_padrino(patrocinador){
         return new Promise((resolve, reject) => {
             let Nuevo_padrino = new Padrino(patrocinador.idEquipo, patrocinador.idPatrocinador)
-            if (validarClass(Nuevo_padrino, reject) !== true) return;
+            if (validarClass(Nuevo_padrino, reject, [], 400) !== true) return;
             connection.query('INSERT INTO `padrinos` SET ?',Nuevo_padrino, function(errFinal, rowsFinal, fieldsFinal) {
                 if (errFinal){
                     reject(new Respuesta(500, errFinal, errFinal));
@@ -88,9 +88,13 @@ class PatrocinadorModel{
         return new Promise((resolve, reject) => {
             connection.query('DELETE FROM `patrocinadores` WHERE `id_patrocinador` = ?',id, function(err, rows, fields) {
                 if (err){
-                    reject(new Respuesta(500, err, err))
-                }else {
-                    resolve()  
+                    reject(new Respuesta(400, err, err))
+                } else if (rows) {
+                    if (rows.affectedRows > 0) {
+                        resolve(new Respuesta(200, "Se ha eliminado exitosamente", rows));
+                    } else {
+                        reject(new Respuesta(404, 'No se eliminó el patrocinador "' + id + '". Es posible de que ya no exista.', rows));
+                    }
                 }
             })
         })  
@@ -101,7 +105,7 @@ class PatrocinadorModel{
                 reject("No puedes cambiar tu modo de patrocinio porque estás financiando a un equipo")
             }else{
                 let Actualizar_patrocinador = new Patrocinador(actualizar.nombre_comercial, actualizar.persona_de_contacto, actualizar.telefono, actualizar.idPatrocinio, actualizar.comentario)
-                if (validarClass(Actualizar_patrocinador, reject, ["comentario","idEquipo"]) !== true) return;
+                if (validarClass(Actualizar_patrocinador, reject, ["comentario","idEquipo"], 400) !== true) return;
                 connection.query('UPDATE `patrocinadores` SET ? WHERE `id_patrocinador` = ?',[Actualizar_patrocinador,id], function(err, rows, fields) {
                     if (err){
                         reject(new Respuesta(500, err, err));

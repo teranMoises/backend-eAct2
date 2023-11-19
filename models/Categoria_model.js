@@ -97,7 +97,7 @@ class CategoriaModel {
     ingresar_categoria(categoria) {
         return new Promise((resolve, reject) => {
             let Nueva_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio)
-            if (validarClass(Nueva_categoria, reject) !== true) return;
+            if (validarClass(Nueva_categoria, reject,[], 400) !== true) return;
             connection.query('INSERT INTO `categorias` SET ?', Nueva_categoria, function (err, rows, fields) {
                 if (err) {
                     reject(err);
@@ -119,7 +119,7 @@ class CategoriaModel {
         return new Promise((resolve, reject) => {
             //console.log("en models", id, categoria);
             let act_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio);
-            if (validarClass(act_categoria, reject) !== true) return;
+            if (validarClass(act_categoria, reject,[], 400) !== true) return;
             let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [act_categoria, id], function (error, results, fields) {
                 if (error) { reject(error); return }
                 console.log('\n ACTUALIZAR: '); console.table(results);
@@ -167,9 +167,13 @@ class CategoriaModel {
         return new Promise((resolve, reject) => {
             connection.query('DELETE FROM `categorias` WHERE `id_categoria` = ?', id, function (err, rows, fields) {
                 if (err) {
-                    reject("La conexión a la base de datos a fallado")
-                } else {
-                    resolve()
+                    reject(new Respuesta(400, err, err))
+                } else if (rows) {
+                    if (rows.affectedRows > 0) {
+                        resolve(new Respuesta(200, "Se ha eliminado exitosamente", rows));
+                    } else {
+                        reject(new Respuesta(404, 'No se eliminó la categoría "' + id + '". Es posible de que ya no exista.', rows));
+                    }
                 }
             })
         })
