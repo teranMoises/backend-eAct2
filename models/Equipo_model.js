@@ -78,6 +78,17 @@ class EquipoModel {
             })
         })
     }
+    ver_equipos_sin_padrino(){
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT `id_equipo`,`participantes`,`nombre_de_equipo` FROM `equipos` WHERE NOT EXISTS( SELECT * FROM `padrinos` WHERE `idEquipo` = `id_equipo`)', function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve(rows)  
+                }
+            })
+        })
+    }
     ingresar_equipo(equipo) {
         return new Promise((resolve, reject) => {
             let Nuevo_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario)
@@ -106,7 +117,15 @@ class EquipoModel {
         })
     }
     editar_equipo(id, actualizar) {
-
+        return new Promise((resolve, reject) => {
+            connection.query('UPDATE `equipos` SET ? WHERE id_equipo = ?', [actualizar,id],function(err, rows, fields) {
+                if (err){
+                    reject(err)
+                }else {
+                    resolve()  
+                }
+            }) 
+        })
     }
     eliminar_equipo(id) {
         return new Promise((resolve, reject) => {

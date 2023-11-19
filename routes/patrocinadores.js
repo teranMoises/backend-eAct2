@@ -57,12 +57,22 @@ router.delete('/:index', function (req ,res , next) {
    })
 })
 
+/* PUT */
+router.put('/:index', function (req, res, next) {
+   Patrocinador_Controller.editar_patrocinador(req.params.index, req.body).then(()=>{
+      Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
+         res.json(resultados);
+      }).catch((error)=>{
+         res.status(500).send(error)
+      })
+   })
+}); 
 
 /* VIEWS */
 
 router.get('/nuevoPatrocinador',function(req, res, next){
    Patrocinador_Controller.ver_patrocinios().then((resultados)=>{
-      Equipos_Controller.ver_equipos().then((equipos)=>{
+      Equipos_Controller.ver_equipos_sin_padrino().then((equipos)=>{
         let patrocinios = resultados;
         let id_equipos = equipos
         res.render('nuevoPatrocinador',{title: 'Crear un Patrocinador', patrocinios: patrocinios, equipos: id_equipos});

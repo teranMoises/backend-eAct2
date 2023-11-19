@@ -35,6 +35,18 @@ class ModalidadModel {
             console.log(query.sql);
         })
     }
+    ver_modalidad_y_categoria(id){
+        return new Promise((resolve, reject)=>{
+            connection.query('SELECT `id_modalidad`,`nombre_modalidad`,`id_categoria`,`nombre_categoria` FROM `categorias` JOIN `modalidades` ON `id_modalidad` = `idModalidad` WHERE `id_modalidad`=?', id, function(error, results,fields){
+                if (error){
+                    reject("La conexión a la base de datos a fallado")
+                }else{
+                    resolve(results)
+                };
+                
+            })
+        })
+    }
 }
 
 module.exports = new ModalidadModel();

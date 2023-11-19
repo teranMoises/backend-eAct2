@@ -43,6 +43,11 @@ class EquipoController {
             Equipo_model.ver_padrinos().then((resultado) => { resolve(resultado) }).catch((error) => { reject(error) });
         })
     }
+    ver_equipos_sin_padrino(){
+        return new Promise((resolve, reject)=>{
+            Equipo_model.ver_equipos_sin_padrino().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
+        }) 
+    }
     ingresar_equipo(equipo) {
         return new Promise((resolve, reject) => {
             Equipo_model.ingresar_equipo(equipo).then((resultado) => { resolve(resultado) }).catch((error) => { reject(error) });
@@ -54,6 +59,15 @@ class EquipoController {
         })
     }
     editar_equipo(id, actualizar) {
+        return new Promise((resolve, reject) => {
+            if (id != undefined) {
+                Equipo_model.editar_equipo(id, actualizar)
+                    .then((retorno) => { resolve(retorno) })
+                    .catch((error) => { reject(error); })
+            } else {
+                return reject('No se ingresó una ID válido');
+            }
+        })
     }
     eliminar_equipo(id) {
         return new Promise((resolve, reject) => {

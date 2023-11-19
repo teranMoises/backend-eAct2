@@ -26,6 +26,11 @@ class PatrocinadorController{
             Patrocinador_Model.eliminar_patrocinador(id).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
         })
     }
+    editar_patrocinador(id, actualizar){
+        return new Promise((resolve, reject)=>{
+            Patrocinador_Model.editar_patrocinador(id,actualizar).then(resolve()).catch((error)=>{reject(error)});  
+        }) 
+    }
 }
 
 module.exports = new PatrocinadorController();

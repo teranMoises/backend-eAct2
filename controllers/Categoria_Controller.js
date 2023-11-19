@@ -17,9 +17,11 @@ class CategoriaController {
         })
     }
     ingresar_categoria(categoria) {
-        return new Promise((resolve, reject)=>{
-            Categoria_model.ingresar_categoria(categoria).then(resolve()).catch((error)=>{reject(error)});    
-        }) 
+        return new Promise((resolve, reject) => {
+            Categoria_model.ingresar_categoria(categoria)
+                .then((ing) => { resolve(ing) })
+                .catch((error) => { reject(error) });
+        })
     }
     editar_categoria(id, actualizar) {
         //console.log("en controller", id, actualizar);
@@ -45,7 +47,10 @@ class CategoriaController {
             }
         })
     }
-    eliminar_categoria(id) {
+    eliminar_categoria(id){
+        return new Promise((resolve, reject)=>{
+            Categoria_model.eliminar_categoria(id).then(resolve()).catch((error)=>{reject(error)});  
+        }) 
     }
 }
 
