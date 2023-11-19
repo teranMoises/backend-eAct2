@@ -62,7 +62,7 @@ router.delete('/:index', function (req ,res , next) {
 
 router.get('/nuevoPatrocinador',function(req, res, next){
    Patrocinador_Controller.ver_patrocinios().then((resultados)=>{
-      Equipos_Controller.ver_equipos().then((equipos)=>{
+      Equipos_Controller.ver_equipos_sin_padrino().then((equipos)=>{
         let patrocinios = resultados;
         let id_equipos = equipos
         res.render('nuevoPatrocinador',{title: 'Crear un Patrocinador', patrocinios: patrocinios, equipos: id_equipos});

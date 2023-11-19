@@ -19,6 +19,11 @@ class EquipoController{
             Equipo_model.ver_padrinos().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
         }) 
     }
+    ver_equipos_sin_padrino(){
+        return new Promise((resolve, reject)=>{
+            Equipo_model.ver_equipos_sin_padrino().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
+        }) 
+    }
     ingresar_equipo(equipo){
         return new Promise((resolve, reject)=>{
             Equipo_model.ingresar_equipo(equipo).then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)});    
