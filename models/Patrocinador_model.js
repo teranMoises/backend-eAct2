@@ -79,6 +79,20 @@ class PatrocinadorModel{
             })
         })  
     }
+    editar_patrocinador(id,actualizar){
+        return new Promise((resolve,reject) => { 
+            let Actualizar_patrocinador = new Patrocinador(actualizar.nombre_comercial, actualizar.persona_de_contacto, 
+   actualizar.telefono, actualizar.idPatrocinio, actualizar.comentario)
+            connection.query('UPDATE `patrocinadores` SET ? WHERE `id_patrocinador` = ?',[Actualizar_patrocinador,id], function
+   (err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    return resolve()
+                }
+            }) 
+        })
+    }
 }
 
 module.exports = new PatrocinadorModel();
