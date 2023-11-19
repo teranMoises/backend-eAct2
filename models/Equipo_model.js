@@ -91,7 +91,15 @@ class EquipoModel{
         })
     }
     editar_equipo(id, actualizar){
-
+        return new Promise((resolve, reject) => {
+            connection.query('UPDATE `equipos` SET ? WHERE id_equipo = ?', [actualizar,id],function(err, rows, fields) {
+                if (err){
+                    reject(err)
+                }else {
+                    resolve()  
+                }
+            }) 
+        })
     }
     eliminar_equipo(id){
         return new Promise((resolve, reject) => {

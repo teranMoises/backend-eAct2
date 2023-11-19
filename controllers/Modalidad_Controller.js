@@ -23,6 +23,11 @@ class ModalidadController {
             }
         })
     }
+    ver_modalidad_y_categoria(id){
+        return new Promise((resolve, reject)=>{
+            Modalidad_Model.ver_modalidad_y_categoria(id).then((retorno)=>{resolve(retorno)}).catch((error)=>{reject(error)});  
+        })   
+    }
     ingresar_modalidad(modalidad) {
         console.log("en controller", modalidad);
         return new Promise((resolve, reject) => {

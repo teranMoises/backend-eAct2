@@ -15,7 +15,13 @@ router.get('/', function (req, res, next) {
             res.status(404).send(error);
         })
 });
-
+router.get('/:index', function (req, res, next) {
+    Modalidad_Controller.ver_modalidad_y_categoria(req.params.index).then((resultados)=>{
+        res.json(resultados);
+    }).catch((error)=>{
+        res.status(404).send(error)
+    })
+}); 
 router.post('/', function (req, res, next) {
     //console.log('en routes', req.body);
     Modalidad_Controller.ingresar_modalidad(req.body)

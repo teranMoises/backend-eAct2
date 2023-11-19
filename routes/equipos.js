@@ -39,6 +39,8 @@ router.delete('/:index',function(req, res, next){
     }) 
 });  
 
+
+/*Ver padrinos*/
 router.get('/padrinos', function (req, res, next) {
     Equipos_Controller.ver_padrinos().then((resultados)=>{
         res.json(resultados);
@@ -68,6 +70,16 @@ router.get('/verEquipo', function(req, res, next) {
   });
   
 
+/*Editar equipo*/
+router.put('/editar_equipo/:editar', function (req, res, next) {
+    Equipos_Controller.editar_equipo(req.params.editar, req.body)
+        .then((resultados) => {
+            res.send(resultados);
+        })
+        .catch((error) => {
+            res.status(404).send(error);
+        })
+        console.table(req.body)
+});
 
 module.exports = router; 
-

@@ -35,6 +35,15 @@ class EquipoController{
         })
     } 
     editar_equipo(id, actualizar){
+        return new Promise((resolve, reject) => {
+            if (id != undefined) {
+                Equipo_model.editar_equipo(id, actualizar)
+                    .then((retorno) => { resolve(retorno) })
+                    .catch((error) => { reject(error); })
+            } else {
+                return reject('No se ingresó una ID válido');
+            }
+        })
     }
     eliminar_equipo(id){
         return new Promise((resolve, reject)=>{
