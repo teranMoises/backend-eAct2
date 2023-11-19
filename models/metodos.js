@@ -24,6 +24,7 @@ function validarClass(clase, detener, excluir = [], codeError = 0) {
         console.log("Error clase.", faltantes);
         if (codeError != 0) {
             detener(new Respuesta(codeError, faltantes, null))
+            return faltantes;
         } else {
             detener(faltantes);
             return faltantes;
