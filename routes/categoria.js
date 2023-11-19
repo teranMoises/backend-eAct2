@@ -71,7 +71,14 @@ router.patch('/:editar', function (req, res, next) {
             res.status(404).send(error);
         })
 });
-
+/* DELETE */
+router.delete('/:index', function (req, res, next) {
+    Categoria_Controller.eliminar_categoria(req.params.index).then(()=>{
+        res.json();
+    }).catch((error)=>{
+        res.status(404).send(error)
+    }) 
+}); 
 
 
 module.exports = router; 
