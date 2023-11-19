@@ -52,11 +52,11 @@ router.put('/:editar', function (req, res, next) {
     Categoria_Controller.editar_categoria(req.params.editar, req.body)
         .then((resultados) => {
             //console.info(resultados);
-            res.send(resultados);
+            res.json(resultados);
         })
         .catch((error) => {
             //console.info(error);
-            res.status(404).send(error);
+            res.status(error.codigo).send(error.mensaje);
         })
 });
 
@@ -69,15 +69,15 @@ router.patch('/:editar', function (req, res, next) {
         })
         .catch((error) => {
             //console.info(error);
-            res.status(404).send(error);
+            res.status(error.codigo).send(error.mensaje);
         })
 });
 /* DELETE */
 router.delete('/:index', function (req, res, next) {
-    Categoria_Controller.eliminar_categoria(req.params.index).then(()=>{
-        res.json();
+    Categoria_Controller.eliminar_categoria(req.params.index).then((resultados)=>{
+        res.status(resultados.codigo).send(resultados.mensaje);
     }).catch((error)=>{
-        res.status(404).send(error)
+        res.status(error.codigo).send(error.mensaje);
     }) 
 }); 
 

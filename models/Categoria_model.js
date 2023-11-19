@@ -27,7 +27,7 @@ class CategoriaModel {
             })
         })
     }
-    buscar_categoria(id_cat_URI, nom_cat_body) {
+    buscar_categoria(id_cat_URI, nom_cat_body) {//Para buscar la categoría por una propiedad
         return new Promise((resolve, reject) => {
             if (nom_cat_body == null) { console.log('No por body'); resolve(id_cat_URI) }
             if (id_cat_URI == null && typeof nom_cat_body == "object" && Object.keys(nom_cat_body).length > 0) {
@@ -52,21 +52,21 @@ class CategoriaModel {
             }
         })
     }
-    buscar_categoria_id(id_cat) {
+    buscar_categoria_id(id_cat) {//Para mostrar la categoria actualizada
         return new Promise((resolve, reject) => {
             if (isNaN(Number(id_cat))) reject(new Respuesta(400, 'Ingresó un ID inválido: ' + id_cat, null));
             connection.query('SELECT * FROM `categorias` WHERE ?', { id_categoria: id_cat }, function (error, results, fields) {
                 if (error) {
                     console.error("Error SQL: ", error);
                     reject(new Respuesta(500, error, error));
-                };
-                if (results.length > 0) {
+                    return
+                } else if (results && results.length > 0) {
                     //console.log("ENCONTRADO", results);
                     resolve(results);
                     //resolve(results[0].id_categoria);
                 } else {
                     //console.error("Error: No se encontraron coincidencias", results);
-                    reject(new Respuesta(400, "Error: No se encontraron coincidencias", results));
+                    reject(new Respuesta(404, "Error: No se encontraron coincidencias", results));
                 };
             });
         })
@@ -125,20 +125,22 @@ class CategoriaModel {
         return new Promise((resolve, reject) => {
             //console.log("en models", id, categoria);
             let act_categoria = new Categoria(categoria.idModalidad, categoria.nombre_categoria, categoria.descripcion, categoria.reglas, categoria.premio);
-            if (validarClass(act_categoria, reject,[], 400) !== true) return;
+            if (validarClass(act_categoria, reject, [], 400) !== true) return;
             let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [act_categoria, id], function (error, results, fields) {
-                if (error) { reject(error); return }
-                console.log('\n ACTUALIZAR: '); console.table(results);
-                if (!results) { reject("Error!"); return };
-                if (results.affectedRows < 1) {
-                    console.log('La categoría "' + id + '" no existe');
-                    reject('No existe ninguna categoría con el ID indicado: ' + id);
+                if (error) { reject(new Respuesta(500, error, error)); return };
+                //console.log('\n ACTUALIZAR: '); console.table(results);
+                if (!results) { reject(new Respuesta(500, "Error!", results)); return }
+                else if (results.affectedRows < 1) {
+                    console.error('El equipo "' + id + '" no existe');
+                    reject(new Respuesta(404, 'No existe ninguna categoría con el ID indicado: ' + id, results));
+                } else if (results.changedRows > 0) {
+                    console.log("Actualizado");
+                    buscar(id, resolve, reject);
+                    //resolve(new Respuesta(200, "Se ha actualizado exitosamente", results));
+                    //resolve('Se ha modificado la categoría "' + id + '" (' + actualizar.nombre_categoria + ')');
+                } else {
+                    resolve("No se modificó la categoría '" + id + "', debido a que los datos ingresados son iguales.");
                 }
-                if (results.changedRows < 1) {
-                    resolve('No se modificó la categoría "' + id + '", debido a que los datos ingresados son iguales.');
-                }
-                //resolve('Se ha modificado la categoría "' + id + '" (' + actualizar.nombre_categoria + ')');
-                buscar(id, resolve, reject);
             });
             //console.log("consulta", query.sql);
         })
@@ -153,17 +155,20 @@ class CategoriaModel {
         }
         return new Promise((resolve, reject) => {
             //console.log("en models", id, actualizar);
+            if (validarClass(actualizar, reject, [], 400) !== true) return;
+            if (typeof actualizar != "object" || Object.keys(actualizar).length < 1) { reject(new Respuesta(400, "No se ingresaron datos para actualizar", actualizar)); return };
             let query = connection.query('UPDATE `categorias` SET ? WHERE id_categoria = ?', [actualizar, id], function (error, results, fields) {
-                if (error) reject(error);
+                if (error) { reject(new Respuesta(500, error, error)); return };
                 //console.log('ACTUALIZAR: \n', results);
-                if (results.affectedRows < 1) {
+                if (!results) { reject(new Respuesta(500, "Error!", results)); return }
+                else if (results.affectedRows < 1) {
                     console.log('La categoría "' + id + '" no existe');
-                    reject('No existe ninguna categoría con el ID indicado: ' + id);
-                }
-                if (results.changedRows < 1) {
-                    resolve('No se modificó la categoría "' + id + '", debido a que los datos ingresados son iguales.');
+                    reject(new Respuesta(404, 'No existe ninguna categoría con el ID indicado: ' + id, results));
+                } else if (results.changedRows < 1) {
+                    resolve("No se modificó la categoría '" + id + "', debido a que los datos ingresados son iguales.");
                 }
                 //resolve('Se ha modificado la categoría "' + id + '" (' + actualizar.nombre_categoria + ')');
+                console.log("Actualizado");
                 buscar(id, resolve, reject);
             });
             //console.log("consulta", query.sql);
