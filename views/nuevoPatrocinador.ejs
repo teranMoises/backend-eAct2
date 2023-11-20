@@ -20,6 +20,8 @@
         <input class="input_form" type="text"  name="persona_de_contacto" required><br>
         <label id="titulo">Teléfono</label><br>
         <input class="input_form" type="text"  name="telefono" required><br>
+        <label id="titulo">Comentario (opcional)</label><br>
+        <input class="input_form" type="text"  name="comentario"><br>
         <input type="submit" class="button" value="Registarse">
         </div>
 
@@ -40,7 +42,7 @@
                     
                             <%  for (let i = 0; i < equipos.length; i++) { %>
                               <label><%= equipos[i].nombre_de_equipo %></label>
-                              <input type="radio" value="<%= equipos[i].id_equipo %>" name="idEquipo" required><br>
+                              <input type="radio" value="<%= equipos[i].id_equipo %>" name="idEquipo"><br>
                             <% } %>
             
                           <% } else if(patrocinios[i].id_patrocinio != 5 ) {%>
