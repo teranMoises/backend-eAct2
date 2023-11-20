@@ -9,6 +9,7 @@
     padding: 25px;
     display: block;
     position: relative;
+    user-select: none;
 }
 
 .logo{
@@ -24,6 +25,7 @@
     margin-left: 20px;
     font-family: 'Open Sans', sans-serif;
     font-weight: 900;
+    user-select: none;
 }
 
 .container{
